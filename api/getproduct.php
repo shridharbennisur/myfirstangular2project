@@ -4,6 +4,7 @@ header('Content-type: application/json');
 ini_Set('display_errors', 1);
 include '/home/costrategix/angular2app/api/configuration.php';
 
+
 $sql = "SELECT * FROM product";
 $result = mysqli_query($conn, $sql);
 $response = array();

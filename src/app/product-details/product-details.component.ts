@@ -3,6 +3,7 @@ import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Http, Headers } from '@angular/http';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs';
+import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 
 
 import { ServiceComponent } from '../service/service.component';
@@ -23,9 +24,10 @@ export class ProductDetailsComponent implements OnInit {
   error = false;
   serviceComponent: ServiceComponent;
   products: any = [];
+  busy;
 
   ngOnInit() {
-    this.getProduct();
+   this.busy =  this.getProduct();
   }
 
   constructor(service: ServiceComponent) {
@@ -33,9 +35,9 @@ export class ProductDetailsComponent implements OnInit {
   }
 
 
-/**
- * function to get all products from database
- */
+  /**
+   * function to get all products from database
+   */
   getProduct() {
     this.serviceComponent.getProduct().subscribe(res => {
       let response = JSON.parse(res._body);
@@ -52,22 +54,53 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   sortByType(type) {
-
-    if (type.indexOf('-') == -1) {
-      this.expression = type;
-      this.reverse = true;
-    } else {
-      this.expression = type.replace('-', '');
-      this.reverse = false;
+    if (type == 'price') {
+      this.products.sort(function (a, b) {
+        return a.price - b.price;
+      });
     }
-    console.log(this.expression);
-    console.log(this.reverse);
+    if (type == '-price') {
+      this.products.sort(function (a, b) {
+        return b.price - a.price;
+      });
+    }
+    if (type == 'quantity') {
+      this.products.sort(function (a, b) {
+        return a.quantity - b.quantity;
+      });
+    }
+    if (type == '-quantity') {
+      this.products.sort(function (a, b) {
+        return b.quantity - a.quantity;
+      });
+    }
+    if (type == 'name') {
+      this.products.sort(function (a, b) {
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+        return 0;
+      });
+    }
+    if (type == '-name') {
+      this.products.sort(function (a, b) {
+        if (a.name > b.name) return -1;
+        if (a.name < b.name) return 1;
+        return 0;
+      });
+    }
+    // if (type.indexOf('-') == -1) {
+    //   this.expression = type;
+    //   this.reverse = true;
+    // } else {
+    //   this.expression = type.replace('-', '');
+    //   this.reverse = false;
+    // }
   }
 
-/**
- * function to add products to database
- * @param newproduct object
- */
+  /**
+   * function to add products to database
+   * @param newproduct object
+   */
   addNewProduct(newproduct) {
     let newName = newproduct.newProductName || undefined;
     let newPrice = newproduct.newProductPrice || undefined;
@@ -77,20 +110,22 @@ export class ProductDetailsComponent implements OnInit {
     } else {
       this.serviceComponent.saveProduct(newproduct).subscribe(res => {
         if (res[0].status == 1) {
+          this.serviceComponent.postLog('success: new product added succesfully').subscribe(res=>console.log(res),err => console.log(err));
           document.location.reload();
         } else if (res[0].status == 0) {
           console.log('Not saved some thing happen!');
+          this.serviceComponent.postLog(res[0].response).subscribe(res=>console.log(res),err => console.log(err));
         }
-      }), error => alert(error);
+      }), error => { this.serviceComponent.postLog(error).subscribe(res=>console.log(res),err => console.log(err)); };
       $('#save').addClass("close");
       $('#save').attr("data-dismiss", "modal");
     }
   }
 
-/**
- * function to get product by productid
- * @param productId
- */
+  /**
+   * function to get product by productid
+   * @param productId
+   */
   getProductById(productId) {
     this.serviceComponent.getProductByProductId(productId).subscribe(res => {
       let response = JSON.parse(res._body);
@@ -98,12 +133,14 @@ export class ProductDetailsComponent implements OnInit {
       this.newProduct.newProductName = response[0].name;
       this.newProduct.newProductPrice = response[0].price;
       this.newProduct.newProductQuantity = response[0].quantity;
-    }), error => alert(error);
+    }), error => {
+      this.serviceComponent.postLog('Error: could not get product').subscribe(res=>console.log(res),err => console.log(err));
+      alert(error)};
   }
 
-/**
- * function to update the product 
- */
+  /**
+   * function to update the product 
+   */
   updateProduct(newproduct) {
     let newName = newproduct.newProductName || undefined;
     let newPrice = newproduct.newProductPrice || undefined;
@@ -113,6 +150,7 @@ export class ProductDetailsComponent implements OnInit {
     } else {
       this.serviceComponent.updateProduct(newproduct).subscribe(res => {
         if (res[0].status == 1) {
+          this.serviceComponent.postLog('success:product details updated successfully').subscribe(res=>console.log(res),err => console.log(err));
           document.location.reload();
         } else {
           console.log(res[0].response);
@@ -123,23 +161,24 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-/**
- * function to dalete product 
- */
+  /**
+   * function to dalete product 
+   */
   deleteProduct(productId) {
     this.serviceComponent.deleteProduct(productId).subscribe(res => {
-       let response = JSON.parse(res._body);
-       if (response[0].status == 1) {
-          document.location.reload();
-        } else {
-          console.log(response[0].response);
-        }  
-    }), error => alert(error);    
+      let response = JSON.parse(res._body);
+      if (response[0].status == 1) {
+        this.serviceComponent.postLog('success:product details deleted successfully').subscribe(res=>console.log(res),err => console.log(err));
+        document.location.reload();
+      } else {
+        this.serviceComponent.postLog(response[0].response).subscribe(res=>console.log(res),err => console.log(err));
+      }
+    }), error => this.serviceComponent.postLog(error).subscribe(res=>console.log(res),err => console.log(err));
   }
 
-/**
- * function to show modal 
- */
+  /**
+   * function to show modal 
+   */
   showModal(modalname) {
     this.error = false;
     if (modalname == 'save') {
@@ -152,17 +191,44 @@ export class ProductDetailsComponent implements OnInit {
     }
     $('#' + modalname).removeClass('close');
     $('#' + modalname).removeAttr('data-dismiss');
-  }  
+  }
 
   /**
    * function to inline edit
    */
-  inlineEdit(productId,productProperty, productValue, tdTagId) {
-    console.log(productId+" "+productProperty+" "+productValue);
-    $('#'+tdTagId).html('<textarea>' + productValue + '</textarea>');   
+  inlineEdit(productId, event, productProperty) {
+    console.log(event.target.outerText);
+    if (event.target.outerText == null || event.target.outerText == '') {
+      this.error = true;
+      console.log('dont give null value');
+    } else {
+      this.error = false;
+      this.serviceComponent.updateProductByProperty(event.target.outerText,productId, productProperty).subscribe(res => {
+        if (res[0].status == 1) {
+          //document.location.reload();
+        } else {
+          console.log(res[0].response);
+        }
+      }), error => alert(error);;
+    }
   }
 
-  
+download() {
+
+var options = { 
+fieldSeparator: ',',
+quoteStrings: '"',
+decimalseparator: '.',
+showLabels: true, 
+showTitle: true 
+};
+this.serviceComponent.postLog('success:csv file is downloaded').subscribe(res=>console.log(res),err => console.log(err));
+new Angular2Csv(this.products, 'All product details',options);
+//new Angular2Csv(dummyData, 'My Report',options);
+} 
+
+
+
 
 }
 

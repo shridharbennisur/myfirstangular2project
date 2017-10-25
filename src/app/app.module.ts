@@ -12,15 +12,21 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { appRoutes } from './app-routing.component';
 import { Ng2OrderModule } from 'ng2-order-pipe';
 import { BsModalModule }  from 'ng2-bs3-modal';
-import { Angular2SocialLoginModule } from "angular2-social-login";
+import { Angular2SocialLoginModule, AuthService } from "angular2-social-login";
 import * as $ from 'jquery';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {BusyModule} from 'angular2-busy';
+
+
 
 
 import { RegisterComponent } from './register/register.component';
 import { UserComponent } from './user/user.component';
-
+import { AgmCoreModule } from '@agm/core';
 let providers = {
+    "linkedin": {
+      "clientId": "811hyyw7jxv17p"
+    },
     "facebook": {
       "clientId": "170831426820416",
       "apiVersion": "v2.8" //like v2.4 
@@ -39,9 +45,11 @@ let providers = {
     UserComponent
   ],
   imports: [
-    BrowserModule, FormsModule, HttpModule, RouterModule.forRoot(appRoutes),Ng2OrderModule,NgbModule.forRoot(),BsModalModule
+    BrowserModule, FormsModule, HttpModule, RouterModule.forRoot(appRoutes),Ng2OrderModule, BusyModule,NgbModule.forRoot(),BsModalModule, AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDqkmgB6TlvsEwnuZ5gXaFgOHnZOKQV0Iw'
+    })
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

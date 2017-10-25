@@ -29,16 +29,16 @@ export class ServiceComponent {
     }
 
     getProduct() {
-         let options = new RequestOptions({ headers: this.headers });
-        return this.http.get('http://localhost:8000/api/getproduct.php',options).map((response) => {
+        let options = new RequestOptions({ headers: this.headers });
+        return this.http.get('http://localhost:8000/api/getproduct.php', options).map((response) => {
             return response;
         });
     }
 
     getProductByProductId(productId) {
-         let options = new RequestOptions({ headers: this.headers });
+        let options = new RequestOptions({ headers: this.headers });
         let url = 'http://localhost:8000/api/getproductbyid.php?id=' + productId;
-        return this.http.get(url,options).map((response) => {
+        return this.http.get(url, options).map((response) => {
             return response;
         });
     }
@@ -56,11 +56,39 @@ export class ServiceComponent {
     }
 
     deleteProduct(productId) {
-         let options = new RequestOptions({ headers: this.headers });
+        let options = new RequestOptions({ headers: this.headers });
         let url = 'http://localhost:8000/api/deleteproduct.php?id=' + productId;
-        return this.http.get(url,options).map((response) => {
+        return this.http.get(url, options).map((response) => {
             return response;
         });
+    }
+
+    updateProductByProperty(productPropertyValue, productId, productPropertyType) {
+        let options = new RequestOptions({ headers: this.headers });
+        return this.http.post('http://localhost:8000/api/updateproductByProperty.php', {
+            id: productId,
+            productValue: productPropertyValue,
+            productPropertyType: productPropertyType,
+        }, options).map((response) => {
+            return response.json();
+        });
+
+    }
+
+    getUserLocation() {
+         return this.http.get(' http://ip-api.com/json').map((response) => {
+            return response;
+        });
+    } 
+
+    postLog(log) {
+        let options = new RequestOptions({ headers: this.headers });
+        return this.http.post('http://localhost:8000/api/log.php', {
+            data:log
+        }, options).map((response) => {
+            return response;
+        });
+
     }
 
 }

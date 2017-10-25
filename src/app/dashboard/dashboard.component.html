@@ -14,12 +14,13 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li  class="active" ><a [routerLink]="['product-details']">Product Details</a></li>
+            <li class="active"><a [routerLink]="['user-details']">user-details</a></li>
+            <li class="active"><a [routerLink]="['product-details']">Product Details</a></li>
             <li><a [routerLink]="['product']">Product</a></li>
           </ul>
           <ul class="nav navbar-nav pull-right" ngbDropdown>
-              
-            <button  class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle type="button" style="color:cadetblue">Admin
+              <img src="{{user.user_image}}" class="img-circle" alt="user_image" width="50" height="50">
+            <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle type="button" style="color:cadetblue">{{user.user_name}}
     <span class="caret"></span></button>
             <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
               <li><a style="cursor: pointer" (click)='logout()'>LOGOUT</a></li>

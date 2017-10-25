@@ -1,0 +1,9 @@
+
+2017-10-18 02:52:35pm=>success:product details updated successfully
+2017-10-18 02:52:47pm=>success:product details deleted successfully
+2017-10-18 02:53:15pm=>success: new product added succesfully
+2017-10-18 02:54:42pm=>success:csv file is downloaded
+2017-10-18 03:13:06pm=>success:csv file is downloaded
+2017-10-18 03:15:22pm => success:product details deleted successfully
+2017-10-18 03:18:06pm => Error: new product could not added
+2017-10-18 03:19:00pm => Unknown column 'nameh' in 'field list'

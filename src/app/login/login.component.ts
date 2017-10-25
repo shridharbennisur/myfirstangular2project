@@ -16,14 +16,30 @@ export class LoginComponent {
     error = false;
     router: Router;
     sub: any;
-    constructor(_router: Router, public _auth: AuthService) {
+    _auth;
+    user = {
+        name:'name',
+        image:'image',
+        provider:'provider'
+    };
+    // constructor(_router: Router, public _auth: AuthService) {
+    //     this.router = _router;
+    // }
+    constructor(_router: Router, _auth: AuthService) {
         this.router = _router;
+        this._auth = _auth
     }
     users = [{
         email: 'shri@gmail.com',
+        name: 'shri',
+        image: 'http://localhost:8000/src/assets/images/default.jpg',
+        provider: 'undefined',
         password: '123456'
     }, {
         email: 'sai@gmail.com',
+        name: 'sai',
+        image: 'http://localhost:8000/src/assets/images/default.jpg',
+        provider: 'undefined',
         password: '123456'
     }
     ];
@@ -31,7 +47,11 @@ export class LoginComponent {
     signIn(provider) {
         this.sub = this._auth.login(provider).subscribe(
             (data) => {
-                console.log(data);
+                this.setCookie('user_name', data.name, 60);
+                this.setCookie('user_image', data.image, 60);
+                this.setCookie('user_provider', data.provider, 60);
+                this.router.navigateByUrl('/dashboard');
+                //console.log(this.user);
             }
         )
     }
@@ -45,7 +65,7 @@ export class LoginComponent {
     }
 
     ngOnDestroy() {
-        this.sub.unsubscribe();
+        //this.sub.unsubscribe();
     }
 
     ngOnInit() {
@@ -53,6 +73,8 @@ export class LoginComponent {
         if (cookiemail != 'null') {
             this.router.navigateByUrl('/dashboard');
         }
+
+
     }
 
 
@@ -60,12 +82,19 @@ export class LoginComponent {
         for (var x = 0; x < this.users.length; x++) {
             if (this.users[x].email === this.email && this.users[x].password === this.password) {
                 this.status = 'true';
-                break;
+                 this.user.name = this.users[x].name;
+                 this.user.image = this.users[x].image;
+                 this.user.provider = this.users[x].provider;
+               console.log(this.user.name+""+ this.user.image+this.user.provider);
+               break;
             }
         }
         if (this.status == 'true') {
             this.setCookie('email', this.email, 2);
-            this.router.navigateByUrl('/dashboard');
+            this.setCookie('user_name', this.user.name, 60);
+            this.setCookie('user_image', this.user.image, 60);
+            this.setCookie('user_provider', this.user.provider, 60);
+           this.router.navigateByUrl('/dashboard', );
         } else {
             this.error = true;
         }

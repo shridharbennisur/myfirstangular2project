@@ -6,6 +6,7 @@ include '/home/costrategix/angular2app/api/configuration.php';
 
 $product = json_decode(file_get_contents('php://input'));
 
+
 $productName = $product->name;
 $productPrice = (int)$product->price;
 $productQuantity = (int)$product->quantity;

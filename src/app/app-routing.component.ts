@@ -7,15 +7,18 @@ import { ProductComponent } from './product/product.component';
 import { ServiceComponent } from './service/service.component';
 import { ProductDetailsComponent} from './product-details/product-details.component';
 import { RegisterComponent } from './register/register.component';
+import { UserComponent } from './user/user.component';
 
 export const appRoutes: Routes = [
-  { path: '', component: LoginComponent },
-  { path:'register', component: RegisterComponent},
+  { path: '', redirectTo:'login', pathMatch: 'full' },
+  {path: 'login', component: LoginComponent},
+  { path:'register', component: RegisterComponent}, 
   { path: 'dashboard', component: DashboardComponent, children: [
     { path:'', redirectTo:'product-details', pathMatch: 'full'},
     { path: 'product-details', component: ProductDetailsComponent  },
     { path: 'product', component: ProductComponent, },
-    { path: 'service', component: ServiceComponent, }
+    { path: 'service', component: ServiceComponent, },
+    { path: 'user-details', component: UserComponent},
   ]}
 ];
 

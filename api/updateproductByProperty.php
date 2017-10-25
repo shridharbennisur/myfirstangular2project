@@ -2,17 +2,16 @@
 
 header("Access-Control-Allow-Origin: *");
 header('Content-type: application/json');
-// ini_Set('display_errors', 1);
+ini_Set('display_errors', 1);
 include '/home/costrategix/angular2app/api/configuration.php';
 
 $product = json_decode(file_get_contents('php://input'));
 
 $productId = $product->id;
-$productName = $product->name;
-$productPrice = $product->price;
-$productQuantity = $product->quantity;
+$productValue = $product->productValue;
+$productProperty = $product->productPropertyType;
 
-$sql = "UPDATE product SET name='$productName', price='$productPrice', quantity= '$productQuantity' WHERE id='$productId'";
+$sql = "UPDATE product SET $productProperty='$productValue'  WHERE id='$productId'";
 $response = array();
 
 if (mysqli_query($conn, $sql)) {
