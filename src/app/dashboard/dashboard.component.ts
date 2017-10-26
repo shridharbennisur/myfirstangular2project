@@ -50,11 +50,11 @@ export class DashboardComponent implements OnInit {
     this._auth.logout().subscribe(
             (data) => {
                 console.log(data);
-                this.router.navigate('/login');
+                this.router.navigateByUrl('login');
             }
         )
     
-    this.router.navigate('/login');
+     this.router.navigateByUrl('login');
 
   }
    

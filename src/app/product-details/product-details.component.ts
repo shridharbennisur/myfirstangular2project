@@ -111,7 +111,8 @@ export class ProductDetailsComponent implements OnInit {
       this.serviceComponent.saveProduct(newproduct).subscribe(res => {
         if (res[0].status == 1) {
           this.serviceComponent.postLog('success: new product added succesfully').subscribe(res=>console.log(res),err => console.log(err));
-          document.location.reload();
+          this.products = [];
+          this.getProduct();
         } else if (res[0].status == 0) {
           console.log('Not saved some thing happen!');
           this.serviceComponent.postLog(res[0].response).subscribe(res=>console.log(res),err => console.log(err));
@@ -151,7 +152,8 @@ export class ProductDetailsComponent implements OnInit {
       this.serviceComponent.updateProduct(newproduct).subscribe(res => {
         if (res[0].status == 1) {
           this.serviceComponent.postLog('success:product details updated successfully').subscribe(res=>console.log(res),err => console.log(err));
-          document.location.reload();
+          this.products = [];
+          this.getProduct();
         } else {
           console.log(res[0].response);
         }
@@ -169,7 +171,8 @@ export class ProductDetailsComponent implements OnInit {
       let response = JSON.parse(res._body);
       if (response[0].status == 1) {
         this.serviceComponent.postLog('success:product details deleted successfully').subscribe(res=>console.log(res),err => console.log(err));
-        document.location.reload();
+        this.products = [];
+        this.getProduct();
       } else {
         this.serviceComponent.postLog(response[0].response).subscribe(res=>console.log(res),err => console.log(err));
       }
@@ -197,7 +200,6 @@ export class ProductDetailsComponent implements OnInit {
    * function to inline edit
    */
   inlineEdit(productId, event, productProperty) {
-    console.log(event.target.outerText);
     if (event.target.outerText == null || event.target.outerText == '') {
       this.error = true;
       console.log('dont give null value');

@@ -19,7 +19,7 @@
             <li><a [routerLink]="['product']">Product</a></li>
           </ul>
           <ul class="nav navbar-nav pull-right" ngbDropdown>
-              <img src="{{user.user_image}}" class="img-circle" alt="user_image" width="50" height="50">
+              <img src="{{user.user_image}}" class="img-circle" alt="{{user.user_name}}" width="50" height="50">
             <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle type="button" style="color:cadetblue">{{user.user_name}}
     <span class="caret"></span></button>
             <ul ngbDropdownMenu aria-labelledby="dropdownBasic1">
